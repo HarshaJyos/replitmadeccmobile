@@ -2,7 +2,7 @@ import { auth } from "../config/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInWithPopup,
+  // signInWithPopup, // Removed for mobile
   GoogleAuthProvider,
   User,
 } from "firebase/auth";
@@ -14,9 +14,15 @@ class FirebaseAuthService {
   private provider = new GoogleAuthProvider();
 
   // Initialize Firebase and notifications
-  initialize() {
-    // Any additional Firebase setup can go here
-    this.registerForPushNotifications();
+  async initialize() {
+    console.log("Initializing Firebase Auth Service...");
+    try {
+      await this.registerForPushNotifications();
+      console.log("Firebase Auth Service initialized successfully");
+    } catch (error) {
+      console.error("Firebase Auth initialization failed:", error);
+      throw error; // Propagate error for upper-level handling
+    }
   }
 
   // Get current user
@@ -50,13 +56,14 @@ class FirebaseAuthService {
     }
   }
 
-  // Google Sign In
+  // Google Sign In (Placeholder for mobile - use expo-auth-session)
   async signInWithGoogle(): Promise<{ success: boolean; error?: string }> {
     try {
-      // Note: signInWithPopup is for web; for mobile, use signInWithRedirect or native Google Sign-In
-      // This is a placeholder; for mobile, integrate with expo-auth-session or similar
-      await signInWithPopup(auth, this.provider);
-      return { success: true };
+      console.warn("Google Sign-In not implemented for mobile yet");
+      return {
+        success: false,
+        error: "Google Sign-In not supported in this build",
+      };
     } catch (error: any) {
       return { success: false, error: error.message };
     }
@@ -67,8 +74,14 @@ class FirebaseAuthService {
     await auth.signOut();
   }
 
-  // Register for push notifications
+  // Register for push notifications with error handling
   private async registerForPushNotifications() {
+    console.log("Registering for push notifications...");
+    if (!Notifications || !Notifications.getExpoPushTokenAsync) {
+      console.warn("Notifications API not available");
+      return;
+    }
+
     try {
       if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("default", {
@@ -86,6 +99,7 @@ class FirebaseAuthService {
       }
 
       const token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log("Push token acquired:", token);
       const user = this.getCurrentUser();
       if (user) {
         await apiService.updateUserProfile(user.uid, { pushToken: token });

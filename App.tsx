@@ -26,18 +26,28 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#00FF00", // Green for buttons
-    accent: "#FFFF00", // Yellow for warnings
-    error: "#FF0000", // Red for errors
-    background: "#000000", // Black background
+    primary: "#00FF00",
+    accent: "#FFFF00",
+    error: "#FF0000",
+    background: "#000000",
     surface: "#000000",
-    text: "#FFFFFF", // White text
+    text: "#FFFFFF",
   },
 };
 
 export default function App() {
   useEffect(() => {
-    firebaseAuthService.initialize();
+    console.log("App starting initialization...");
+    try {
+      firebaseAuthService
+        .initialize()
+        .catch((error) =>
+          console.error("Firebase initialization error:", error)
+        );
+      console.log("App initialization completed");
+    } catch (error) {
+      console.error("Critical error during app initialization:", error);
+    }
   }, []);
 
   return (
