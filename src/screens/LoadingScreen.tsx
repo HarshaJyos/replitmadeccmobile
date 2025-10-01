@@ -4,6 +4,7 @@ import { Text, ActivityIndicator } from "react-native-paper";
 import { firebaseAuthService } from "../services/firebaseAuthService";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/types/navigation";
+
 // Define navigation prop type
 type ApplicationsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
@@ -11,10 +12,18 @@ type ApplicationsScreenNavigationProp =
 interface ApplicationsScreenProps {
   navigation: ApplicationsScreenNavigationProp;
 }
+
 const LoadingScreen = ({ navigation }: ApplicationsScreenProps) => {
   useEffect(() => {
     const checkAuth = async () => {
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate load
+      console.log("App starting initialization...");
+      try {
+        await firebaseAuthService.initialize();
+        console.log("App initialization completed");
+      } catch (error) {
+        console.error("Critical error during app initialization:", error);
+      }
       if (firebaseAuthService.getCurrentUser()) {
         navigation.replace("Recommendations");
       } else {

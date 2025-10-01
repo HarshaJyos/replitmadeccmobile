@@ -1,11 +1,10 @@
-import { auth } from "../config/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  // signInWithPopup, // Removed for mobile
   GoogleAuthProvider,
   User,
 } from "firebase/auth";
+import { auth } from "../config/firebase"; // Import the auth instance
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import { apiService } from "./api";
@@ -98,7 +97,9 @@ class FirebaseAuthService {
         return;
       }
 
-      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      const projectId = "your-project-id"; // Replace with your Expo project ID from app.json
+      const token = (await Notifications.getExpoPushTokenAsync({ projectId }))
+        .data;
       console.log("Push token acquired:", token);
       const user = this.getCurrentUser();
       if (user) {

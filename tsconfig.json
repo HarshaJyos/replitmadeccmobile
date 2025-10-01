@@ -4,10 +4,11 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
     },
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "react-native"   // ✅ This enables JSX support for React Native
+    "jsx": "react-native" // ✅ This enables JSX support for React Native
   }
 }

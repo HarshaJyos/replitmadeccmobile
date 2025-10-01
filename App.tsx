@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PaperProvider, DefaultTheme } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { firebaseAuthService } from "./src/services/firebaseAuthService";
 import { RootStackParamList } from "./src/types/navigation";
 
 // Screens
@@ -36,20 +35,6 @@ const theme = {
 };
 
 export default function App() {
-  useEffect(() => {
-    console.log("App starting initialization...");
-    try {
-      firebaseAuthService
-        .initialize()
-        .catch((error) =>
-          console.error("Firebase initialization error:", error)
-        );
-      console.log("App initialization completed");
-    } catch (error) {
-      console.error("Critical error during app initialization:", error);
-    }
-  }, []);
-
   return (
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
